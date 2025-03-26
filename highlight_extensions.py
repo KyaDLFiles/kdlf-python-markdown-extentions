@@ -1,4 +1,4 @@
-class WarningSpanProcessor(InlineProcessor):
+class UnsureSpanProcessor(InlineProcessor):
     SPAN_CLASS = "text-warning"
     def handleMatch(self, m, data):
         el = etree.Element("span")
@@ -6,16 +6,16 @@ class WarningSpanProcessor(InlineProcessor):
         el.attrib["class"] = self.SPAN_CLASS
         return el, m.start(0), m.end(0)
 
-class WarningSpanExtension(Extension):
+class UnsureSpanExtension(Extension):
     """Extension to convert *! this pattern !* to <span style='text-warning'> this pattern </span>"""
     def extendMarkdown(self, md):
-        WARNING_SPAN_PATTERN = r"\*!(.*?)!\*" # match *! a pattern like this *!
+        WARNING_HIGHLIGHT_PATTERN = r"\*!(.*?)!\*" # match *! a pattern like this *!
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(WarningSpanProcessor(WARNING_SPAN_PATTERN, md), "warning_span", 175)
+        md.inlinePatterns.register(UnsureSpanProcessor(WARNING_SPAN_PATTERN, md), "warning_highlight", 175)
 
-class UnsureSpanProcessor(InlineProcessor):
+class UnsureHighlightProcessor(InlineProcessor):
     SPAN_CLASS = "text-unsure"
     def handleMatch(self, m, data):
         el = etree.Element('span')
@@ -23,12 +23,12 @@ class UnsureSpanProcessor(InlineProcessor):
         el.attrib["class"] = self.SPAN_CLASS
         return el, m.start(0), m.end(0)
 
-class UnsureSpanExtension(Extension):
-    """Extension to convert *! this pattern !* to <span style='text-warning'> this pattern </span>"""
+class UnsureHighlightExtension(Extension):
+    """Extension to convert *! this pattern !* to <span style='text-unsure'> this pattern </span>"""
     def extendMarkdown(self, md):
-        UNSURE_SPAN_PATTERN = r"\*\?(.*?)\?\*" # match *? a pattern like this ?*
+        UNSURE_HIGHLIGHT_PATTERN = r"\*\?(.*?)\?\*" # match *? a pattern like this ?*
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(UnsureSpanProcessor(UNSURE_SPAN_PATTERN, md), "unsure_span", 175)
+        md.inlinePatterns.register(UnsureHighlightProcessor(UNSURE_SPAN_PATTERN, md), "unsure_highlight", 175)
 
