@@ -1,3 +1,4 @@
+
 _RE_HEADERS = r'#+(?= )'
 
 class AddBlanksAroundHeadersPreprocessor(Preprocessor):
@@ -23,27 +24,26 @@ class AddBlanksAroundHeadersExtension(Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
         self.md = md
-        md.preprocessors.register(AddBlanksAroundHeadersPreprocessor(md), 'headers-blanks', 200)
-
+        md.preprocessors.register(AddBlanksAroundHeadersPreprocessor(md), 'blanks', 175)
 
 class SectionsViaHeadersBlockProcessor(BlockProcessor):
     """Wraps sections of the document delimited by headers of different level in <section> tags,
     and applies an id derived from the header text to it"""
     # Holy JESUS did this take long to figure out
 
-    _RE_HEADERS = r'^#+(?= )'
 
     def test(self, parent, block):
-        return re.match(self.RE_HEADERS, block)
+        return re.match(_RE_HEADERS, block)
 
     def run(self, parent, blocks):
-        def _wrap(wrap_end):
+        def _wrap(wrap_end: int) -> None:
             # Create a new <section> to wrap the block around
             e = etree.SubElement(parent, 'section')
             # Add the HTML header as it's first child, and set its text
             child = etree.SubElement(e, f'h{starting_level}')
             child.text = header_text
-            e.set('style', 'display: inline-block; border: 1px solid red;')
+            e.set('style', 'border: 1px solid red;')
+            e.set('id', section_id)
             # Iteratively call the parser on the blocks BETWEEN the two found headers (or end of block/file)
             # The header was added manually above because otherwise it would've been discarded since here it's being skipped
             self.parser.parseBlocks(e, blocks[1:wrap_end])
@@ -53,9 +53,10 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
 
         # First of all, get the starting block, what has matched (the #s), and how many of them there are
         starting_block = blocks[0]
-        starting_match = re.match(self.RE_HEADERS, starting_block).group()
+        starting_match = re.match(_RE_HEADERS, starting_block).group()
         starting_level = len(starting_match) # Number of #s in the header
         header_text = starting_block[starting_level + 1:] # Get the actual text in the header
+        section_id = re.sub(r' +', '-', header_text.lower().strip()) # Lowercase, strip, and replace spaces with hyphens
 
         end_matched = False
         # Find next block with the same level of heading
@@ -63,7 +64,7 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
             if block_num == 0:
                 # Skip the block that initiated the search
                 continue
-            result = re.search(self.RE_HEADERS, block)
+            result = re.search(_RE_HEADERS, block)
             if result:
                 # If another header is found, check if it's the same level of heading
                 ending_match = result.group()
@@ -105,6 +106,4 @@ class SectionsViaHeadersExtension(Extension):
         foobar
     </section>"""
     def extendMarkdown(self, md):
-        md.registerExtension(self)
-        self.md = md
-        md.parser.blockprocessors.register(SectionsViaHeadersBlockProcessor(md.parser), 'box', 201)
+        md.parser.blockprocessors.register(SectionsViaHeadersBlockProcessor(md.parser), 'box', 175)
