@@ -24,7 +24,7 @@ class AddBlanksAroundHeadersExtension(Extension):
     def extendMarkdown(self, md):
         md.registerExtension(self)
         self.md = md
-        md.preprocessors.register(AddBlanksAroundHeadersPreprocessor(md), 'blanks', 175)
+        md.preprocessors.register(AddBlanksAroundHeadersPreprocessor(md), 'header-blanks', 200)
 
 class SectionsViaHeadersBlockProcessor(BlockProcessor):
     """Wraps sections of the document delimited by headers of different level in <section> tags,
@@ -106,4 +106,6 @@ class SectionsViaHeadersExtension(Extension):
         foobar
     </section>"""
     def extendMarkdown(self, md):
-        md.parser.blockprocessors.register(SectionsViaHeadersBlockProcessor(md.parser), 'box', 175)
+        md.registerExtension(self)
+        self.md = md
+        md.parser.blockprocessors.register(SectionsViaHeadersBlockProcessor(md.parser), 'header-sections', 201)
