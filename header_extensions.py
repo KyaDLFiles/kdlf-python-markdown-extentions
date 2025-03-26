@@ -44,8 +44,7 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
             child.text = header_text
             e.set('style', 'border: 1px solid red;')
             e.set('id', section_id)
-            # Iteratively call the parser on the blocks BETWEEN the two found headers (or end of block/file)
-            # The header was added manually above because otherwise it would've been discarded since here it's being skipped
+            # Iteratively call the parser on the blocks BETWEEN the two found headers (or end of block/file) (excluding the header that initiated the match)
             self.parser.parseBlocks(e, blocks[1:wrap_end])
             # Remove used blocks
             for i in range(0, wrap_end):
