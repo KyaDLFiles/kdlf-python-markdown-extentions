@@ -1,4 +1,13 @@
-class UnsureSpanProcessor(InlineProcessor):
+from markdown import Markdown
+from markdown.inlinepatterns import InlineProcessor
+from markdown.blockprocessors import BlockProcessor
+from markdown.extensions import Extension
+from markdown.preprocessors import Preprocessor
+import xml.etree.ElementTree as etree
+import re
+import markdown
+
+class WarningHighlightProcessor(InlineProcessor):
     SPAN_CLASS = "text-warning"
     def handleMatch(self, m, data):
         el = etree.Element("span")
@@ -6,14 +15,14 @@ class UnsureSpanProcessor(InlineProcessor):
         el.attrib["class"] = self.SPAN_CLASS
         return el, m.start(0), m.end(0)
 
-class UnsureSpanExtension(Extension):
+class WarningHighlightExtension(Extension):
     """Extension to convert *! this pattern !* to <span style='text-warning'> this pattern </span>"""
     def extendMarkdown(self, md):
         WARNING_HIGHLIGHT_PATTERN = r"\*!(.*?)!\*" # match *! a pattern like this *!
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(UnsureSpanProcessor(WARNING_SPAN_PATTERN, md), "warning_highlight", 175)
+        md.inlinePatterns.register(WarningHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
 
 class UnsureHighlightProcessor(InlineProcessor):
     SPAN_CLASS = "text-unsure"
@@ -30,5 +39,5 @@ class UnsureHighlightExtension(Extension):
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(UnsureHighlightProcessor(UNSURE_SPAN_PATTERN, md), "unsure_highlight", 175)
+        md.inlinePatterns.register(UnsureHighlightProcessor(UNSURE_HIGHLIGHT_PATTERN, md), "unsure_highlight", 66)
 
