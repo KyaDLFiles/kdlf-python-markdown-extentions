@@ -7,13 +7,13 @@ import xml.etree.ElementTree as etree
 import re
 import markdown
 
-_RE_HEADERS = r'#+(?= )'
+_RE_HEADERS = re.compile(r'#+(?= )', re.UNICODE | re.DOTALL)
 
 class AddBlanksAroundHeadersPreprocessor(Preprocessor):
     """ Add a blank line before and after all headers if not already present
     This is needed because all headers must be alone in their own block for SectionsViaHeaders to work"""
     def run(self, lines):
-        new_lines = [] # Lines are handled in a separate lists because it would be a pain to have a list that mutates while iterating on it
+        new_lines = [] # Lines are stored in a separate lists because it would be a pain to have a list that mutates while iterating on it
         for line_num, line in enumerate(lines):
             if re.search(_RE_HEADERS, line): # Check if current line is a header
                 # Check previous and next line, and add blanks if needed
@@ -38,7 +38,6 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
     """Wraps sections of the document delimited by headers of different level in <section> tags,
     and applies an id derived from the header text to it"""
     # Holy JESUS did this take long to figure out
-
 
     def test(self, parent, block):
         return re.match(_RE_HEADERS, block)
@@ -65,7 +64,6 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
         header_text = starting_block[starting_level + 1:] # Get the actual text in the header
         section_id = re.sub(r' +', '-', header_text.lower().strip()) # Lowercase, strip, and replace spaces with hyphens
 
-        end_matched = False
         # Find next block with the same level of heading
         for block_num, block in enumerate(blocks):
             if block_num == 0:

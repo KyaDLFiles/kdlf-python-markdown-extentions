@@ -22,7 +22,10 @@ class PS2ButtonsExtension(Extension):
     @!s → <span class='inline-button'><img ...></span>
     @!!s→ <span class='inline-button'><img ...>&nbsp;Square</span>"""
     def extendMarkdown(self, md):
-        PS2_BUTTONS_PATTERN = r'(@!{1,2})(t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se)'
+        _ALL_BTNS_LOWER = "t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se"
+        _ALL_BTNS_UPPER = _ALL_BTNS_LOWER.upper()
+        PS2_BUTTONS_PATTERN = r'(@!{1,2})(' + _ALL_BTNS_LOWER + r'|' + _ALL_BTNS_UPPER + r')'
+
 
         md.registerExtension(self)
         self.md = md
@@ -66,7 +69,7 @@ class PS2ButtonsProcessor(InlineProcessor):
         self.imgs_extension = ext.getConfig("imgs_extension")
 
     def handleMatch(self, m, data):
-        button_match = m.group(2) # Get the button abbreviation
+        button_match = m.group(2).lower() # Get the button abbreviation and make it lowercase
 
         # Abort if the button abbreviation is not valid
         # Could also be done later with a try/catch, but doing it here avoids creating nodes that would go wasted
