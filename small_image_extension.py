@@ -38,8 +38,8 @@ class SmallImageProcessor(LinkInlineProcessor):
 class SmallImageExtension(Extension):
     """Extension to convert *! this pattern !* to <span style='text-warning'> this pattern </span>"""
     def extendMarkdown(self, md):
-        SMALL_IMAGE_PATTERN = r'\!\!\['
+        SMALL_IMAGE_PATTERN = r'!!\['
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(SmallImageProcessor(SMALL_IMAGE_PATTERN, md), "small_image", 175) # !Priority lower than the stock image parser
+        md.inlinePatterns.register(SmallImageProcessor(SMALL_IMAGE_PATTERN, md), "small_image", 175) # !Priority higher than the stock image parser

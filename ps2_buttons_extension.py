@@ -7,6 +7,10 @@ import xml.etree.ElementTree as etree
 import re
 import markdown
 
+_ALL_BTNS_LOWER = "t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se"
+_ALL_BTNS_UPPER = _ALL_BTNS_LOWER.upper()
+PS2_BUTTONS_PATTERN = r'(@!{1,2})(' + _ALL_BTNS_LOWER + r'|' + _ALL_BTNS_UPPER + r')'
+
 class PS2ButtonsExtension(Extension):
     """Extension to quickly insert images of PS2 buttons inline
     Buttons are abbreviated as:
@@ -22,11 +26,6 @@ class PS2ButtonsExtension(Extension):
     @!s → <span class='inline-button'><img ...></span>
     @!!s→ <span class='inline-button'><img ...>&nbsp;Square</span>"""
     def extendMarkdown(self, md):
-        _ALL_BTNS_LOWER = "t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se"
-        _ALL_BTNS_UPPER = _ALL_BTNS_LOWER.upper()
-        PS2_BUTTONS_PATTERN = r'(@!{1,2})(' + _ALL_BTNS_LOWER + r'|' + _ALL_BTNS_UPPER + r')'
-
-
         md.registerExtension(self)
         self.md = md
         md.inlinePatterns.register(PS2ButtonsProcessor(PS2_BUTTONS_PATTERN, md, self), "ps2_buttons", 175)
