@@ -14,7 +14,7 @@ CELL_CLASS_PATTERN = r'(?<!#)\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
 ROW_HIGHLIGHT_PATTERN = r'#!\d+'
 CELL_HIGHLIGHT_PATTERN = r'(?<!#)!\d+'
 COLSPAN_PATTERN = r'>\d+'
-PROPERTIES_PATTERN = (r'!{ *'
+PROPERTIES_PATTERN = (^r'!{ *'
                       f'({ROW_CLASS_PATTERN} *)*' # Group 1
                       f'({CELL_CLASS_PATTERN} *)*' # Group 2
                       f'({ROW_HIGHLIGHT_PATTERN} *)*' # Group 3
