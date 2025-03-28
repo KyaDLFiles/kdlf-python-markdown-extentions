@@ -48,6 +48,7 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
             # Add the HTML header as it's first child, and set its text
             child = etree.SubElement(e, f'h{starting_level}')
             child.text = header_text
+            e.attrib["class"] = f"section-level-{starting_level}"
             # Iteratively call the parser on the blocks BETWEEN the two found headers (or end of block/file) (excluding the header that initiated the match)
             self.parser.parseBlocks(e, blocks[1:wrap_end])
             # Remove used blocks
