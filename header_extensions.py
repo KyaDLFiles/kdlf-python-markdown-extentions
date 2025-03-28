@@ -35,8 +35,7 @@ class AddBlanksAroundHeadersExtension(Extension):
         md.preprocessors.register(AddBlanksAroundHeadersPreprocessor(md), 'header-blanks', 200)
 
 class SectionsViaHeadersBlockProcessor(BlockProcessor):
-    """Wraps sections of the document delimited by headers of different level in <section> tags,
-    and applies an id derived from the header text to it"""
+    """Wraps sections of the document delimited by headers of different level in <section> tags"""
     # Holy JESUS did this take long to figure out
 
     def test(self, parent, block):
@@ -49,8 +48,6 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
             # Add the HTML header as it's first child, and set its text
             child = etree.SubElement(e, f'h{starting_level}')
             child.text = header_text
-            e.set('style', 'border: 1px solid red;')
-            e.set('id', section_id)
             # Iteratively call the parser on the blocks BETWEEN the two found headers (or end of block/file) (excluding the header that initiated the match)
             self.parser.parseBlocks(e, blocks[1:wrap_end])
             # Remove used blocks
@@ -62,7 +59,6 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
         starting_match = re.match(_RE_HEADERS, starting_block).group()
         starting_level = len(starting_match) # Number of #s in the header
         header_text = starting_block[starting_level + 1:] # Get the actual text in the header
-        section_id = re.sub(r' +', '-', header_text.lower().strip()) # Lowercase, strip, and replace spaces with hyphens
 
         # Find next block with the same level of heading
         for block_num, block in enumerate(blocks):
@@ -86,8 +82,7 @@ class SectionsViaHeadersBlockProcessor(BlockProcessor):
 
 
 class SectionsViaHeadersExtension(Extension):
-    """ Extention to wrap sections of the document delimited by headers of different level in <section> tags,
-    and apply an id derived from the header text to it
+    """ Extention to wrap sections of the document delimited by headers of different level in <section> tags
 
     For example:
     # Section 1
@@ -99,15 +94,19 @@ class SectionsViaHeadersExtension(Extension):
         foobar
 
     Becomes:
-    <section id='section-1'>
-        <section id='section-1a'>
+    <section>
+        <h1>Section 1</h1>
+        <section>
+            <h2>Section 1A</h2>
             foo
         </section>
-        <section id='section-1b'>
+        <section>
+            <h2>Section 1B</h2>
             bar
         </section>
     </section>
-    <section id='section-2'>
+    <section>
+        <h1>Section 2</h1>
         foobar
     </section>"""
     def extendMarkdown(self, md):
