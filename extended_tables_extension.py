@@ -108,7 +108,7 @@ class ExtendedTableExtension(Extension):
             ...
         </tr>
 
-    NOTE: when applying a colspan of X, the X rows after that in the Markdown will be discarded
+    NOTE: when applying a colspan of X, the X cells after it will be discarded (so they may as well be empty)
     Example:
         |!{>4} Span|These|will|be|discarded|but not this one|
     Creates:
