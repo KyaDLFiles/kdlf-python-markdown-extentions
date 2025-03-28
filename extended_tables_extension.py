@@ -29,6 +29,7 @@ class ExtendedTableProcessor(tables.TableProcessor):
     # https://docs.python.org/3/library/re.html#re.Match.group
     # So I've just kept them in a fixed order, I don't think anyone would find it too much of an issue
     # (if anyone else apart from me were ever to use this extension, that is)
+    # (also, it's definitely possible to have the flags in any order by just using iteration)
     def _build_row(self, row: str, parent: etree.Element, align: Sequence[str | None]) -> None:
         """ Given a row of text, build table cells. """
         tr = etree.SubElement(parent, 'tr')
