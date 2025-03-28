@@ -9,10 +9,10 @@ import re
 from typing import Sequence
 import markdown
 
-ROW_CLASS_PATTERN = r'#\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
-CELL_CLASS_PATTERN = r'(?<!#)\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
-ROW_HIGHLIGHT_PATTERN = r'#!\d+'
-CELL_HIGHLIGHT_PATTERN = r'(?<!#)!\d+'
+ROW_CLASS_PATTERN = r'\+\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
+CELL_CLASS_PATTERN = r'(?<!\+)\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
+ROW_HIGHLIGHT_PATTERN = r'\+!\d+'
+CELL_HIGHLIGHT_PATTERN = r'(?<!\+)!\d+'
 COLSPAN_PATTERN = r'>\d+'
 PROPERTIES_PATTERN = (r'^!{ *'
                       f'({ROW_CLASS_PATTERN} *)*' # Group 1
@@ -92,15 +92,15 @@ class ExtendedTableExtension(Extension):
     """ Add tables to Markdown, with the following extensions:
     After opening a cell with |, insert !{<options>} to change some attributes of the row or cell
     The available options are:
-    #.class    : Apply class the whole row
+    +.class    : Apply class the whole row
     .class     : Apply class to the cell
-    #!<number> : Apply class table-highlight-<number> to row
+    +!<number> : Apply class table-highlight-<number> to row
     !<number>  : Apply class table-highlight-<number> to cell
     ><number>  : Apply colspan of <number> to cell
 
     The options must be specified in this order, but multiple values for the same attribute can be applied (except for colspan), and can be separated by spaces
     Example:
-        |!{.center-align #!1 >3} text|
+        |!{.center-align +!1 >3} text|
     Creates
         <tr class="table-highlight-1">
             ...
