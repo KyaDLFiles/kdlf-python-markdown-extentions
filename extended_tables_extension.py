@@ -48,7 +48,7 @@ class ExtendedTableProcessor(tables.TableProcessor):
                 text = cells[i] # Get the text inside the cell WITHOUT stripping
                 m = re.match(PROPERTIES_PATTERN, text) # Try to match with the properties at the beginning (right after the pipe)
                 if m:
-                    if m.group(1) is not None: # If the first group matched, it matched with #.
+                    if m.group(1) is not None: # If the first group matched, it matched with +.
                         if 'class' not in tr.attrib:
                             tr.attrib['class'] = ''
                         for m2 in re.finditer(ROW_CLASS_PATTERN, text): # Get the highlight number
@@ -60,7 +60,7 @@ class ExtendedTableProcessor(tables.TableProcessor):
                         for m2 in re.finditer(CELL_CLASS_PATTERN, text):  # Get the highlight number
                             c.attrib['class'] = f"{c.attrib['class']} {m2.group(0)[1:]}"  # Apply class
 
-                    if m.group(3) is not None: # If the third group matched, it matched with #!
+                    if m.group(3) is not None: # If the third group matched, it matched with +!
                         if 'class' not in tr.attrib:
                             tr.attrib['class'] = ''
                         for m2 in re.finditer(ROW_HIGHLIGHT_PATTERN, text): # Get the highlight number
