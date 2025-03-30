@@ -9,7 +9,7 @@ import markdown
 
 _ALL_BTNS_LOWER = "t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se"
 _ALL_BTNS_UPPER = _ALL_BTNS_LOWER.upper()
-PS2_BUTTONS_PATTERN = r'(@!{1,2})(' + _ALL_BTNS_LOWER + r'|' + _ALL_BTNS_UPPER + r')'
+PS2_BUTTONS_PATTERN = r'(@{2,3})(' + _ALL_BTNS_LOWER + r'|' + _ALL_BTNS_UPPER + r')'
 
 class PS2ButtonsExtension(Extension):
     """Extension to quickly insert images of PS2 buttons inline
