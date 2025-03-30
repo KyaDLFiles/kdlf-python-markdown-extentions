@@ -15,7 +15,7 @@ class PS2ButtonsExtension(Extension):
     """Extension to quickly insert images of PS2 buttons inline
     Buttons are abbreviated as:
     q (sQuare), x (cross), o (circle), t (Triangle), du, dl, dd, dr (Dpad Up, Left, Down, Right), l1, l2, l3, r1, r2, r3, st (STart), se (SElect)
-    @!<abbreviation> replaces with the image of the button only, @!!<abbreviation> replaces with the image and name of the button as text
+    @@<abbreviation> replaces with the image of the button only, @@@<abbreviation> replaces with the image and name of the button as text
     To make things easier, the filenames (apart from the extension) of the image files must be the same as the abbreviations
 
     Takes two config options:
@@ -23,8 +23,8 @@ class PS2ButtonsExtension(Extension):
     'imgs_extension' (default: '.png') indicates the extension of the image files (without the dot)
 
     Example:
-    @!s → <span class='inline-button'><img ...></span>
-    @!!s→ <span class='inline-button'><img ...>&nbsp;Square</span>"""
+    @@s → <span class='inline-button'><img ...></span>
+    @@@s→ <span class='inline-button'><img ...>&nbsp;Square</span>"""
     def extendMarkdown(self, md):
         md.registerExtension(self)
         self.md = md
@@ -85,10 +85,10 @@ class PS2ButtonsProcessor(InlineProcessor):
         img_e.attrib["alt"] = self.BUTTON_NAMES[button_match]
         # Get and check the type of match
         type_match = m.group(1)
-        if type_match == "@!":
+        if type_match == "@@":
             # Return the span as is
             return e, m.start(0), m.end(0)
-        elif type_match == "@!!":
+        elif type_match == "@@@":
             # Add text and return the span
             e.tail = "&nbsp;" + self.BUTTON_NAMES[button_match]
             return e, m.start(0), m.end(0)
