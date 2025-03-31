@@ -63,6 +63,7 @@ class PS2ButtonsProcessor(InlineProcessor):
     # The extension needs to be passed to read the config (I'm not sure if it's the best thing to do, but I'm pretty sure I saw an official extension doing it)
     def __init__(self, pattern: str, md: Markdown, ext: PS2ButtonsExtension):
         super().__init__(pattern)
+        self.md = md
 
         self.imgs_path = ext.getConfig("imgs_path")
         self.imgs_extension = ext.getConfig("imgs_extension")

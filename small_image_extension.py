@@ -36,7 +36,7 @@ class SmallImageProcessor(LinkInlineProcessor):
         return e, m.start(0), index
 
 class SmallImageExtension(Extension):
-    """Extension to convert *! this pattern !* to <span style='text-warning'> this pattern </span>"""
+    """Extension to insert small, clickable image previews"""
     def extendMarkdown(self, md):
         SMALL_IMAGE_PATTERN = r'!!\['
 

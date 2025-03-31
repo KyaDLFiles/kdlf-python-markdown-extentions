@@ -36,7 +36,6 @@ class AddBlanksAroundHeadersExtension(Extension):
 
 class SectionsViaHeadersBlockProcessor(BlockProcessor):
     """Wraps sections of the document delimited by headers of different level in <section> tags"""
-    # Holy JESUS did this take long to figure out
 
     def test(self, parent, block):
         return re.match(_RE_HEADERS, block)

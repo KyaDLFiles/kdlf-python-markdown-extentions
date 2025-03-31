@@ -3,5 +3,6 @@ __all__ = [
     "header_extensions",
     "highlight_extensions",
     "ps2_buttons_extension",
-    "small_image_extension"
+    "small_image_extension",
+    "inline_extensions"
 ]
