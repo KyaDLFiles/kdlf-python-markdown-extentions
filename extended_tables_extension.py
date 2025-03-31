@@ -1,13 +1,11 @@
-from markdown import Markdown
-from markdown.inlinepatterns import InlineProcessor
-from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import tables
 from markdown.extensions import Extension
-from markdown.preprocessors import Preprocessor
+from typing import Sequence
 import xml.etree.ElementTree as etree
 import re
-from typing import Sequence
-import markdown
+import copy
+
+ROWSPAN_DICT_DEFAULT = {"rowspan": 1, "colspan": 1}
 
 ROW_CLASS_PATTERN = r'\+\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
 CELL_CLASS_PATTERN = r'(?<!\+)\.[_\-a-zA-Z][_\-a-zA-Z\d]*'
@@ -52,7 +50,10 @@ class ExtendedTableProcessor(tables.TableProcessor):
             else:
                 align.append(None)
 
-        self.rowspans = [0] * len(align) # Initialize rowspans
+        # Initialize rowspans
+        self.rowspans = []
+        for k in range(len(align)):
+            self.rowspans.append(copy.deepcopy(ROWSPAN_DICT_DEFAULT))
 
         # Build table
         table = etree.SubElement(parent, 'table')
@@ -79,7 +80,7 @@ class ExtendedTableProcessor(tables.TableProcessor):
         i = 0 # "actual" index of the cell (if you consider colspanned cells as separate)
         j = 0 # index of cell as being read from the file
         while i < len(align):
-            if self.rowspans[i] == 0:
+            if self.rowspans[i]["rowspan"] < 2:
                 a = align[i] # Get the align value for this column
                 c = etree.SubElement(tr, tag) # Create the td
                 colspan = 1
@@ -120,14 +121,11 @@ class ExtendedTableProcessor(tables.TableProcessor):
                             rowspan = int(re.search(ROWSPAN_PATTERN, text).group(0)[1])
                             c.attrib['rowspan'] = str(rowspan)
 
-                        self.rowspans[i] = rowspan - 1 # Set the rowspan for this cell
-                        if rowspan > 1 and colspan > 1: # If the cell has both rowspan and colspan, set dummy rowspans for next cells
-                            for k in range(colspan - 1):
-                                self.rowspans[k + i + 1] = -1
+
+                        self.rowspans[i]["rowspan"] = rowspan # Set the rowspan for this cell
+                        self.rowspans[i]["colspan"] = colspan # Set the colspan for this cell
                         if colspan > 1: # Skip n-1 cells if cell has n colspan
                             i += colspan - 1
-
-
 
                     c.text = re.sub(PROPERTIES_PATTERN, '', text).strip() # Remove the properties, strip, and set as the text of the cell
                 except IndexError:  # pragma: no cover
@@ -140,18 +138,11 @@ class ExtendedTableProcessor(tables.TableProcessor):
                     else:
                         c.set('style', f'text-align: {a};')
             else: # if there's a cell in a previous row that has a rowspan overriding this cell, don't generate anything and decrement the counter
-                k = i + 1 # Index starting on next cell
+                k = i
                 j += 1 # Skip dummy cell in markdown
-                clear = False
-                if self.rowspans[i] == 1: # If current rowspan is 1, clear all dummy values on the right
-                    clear = True
-
-                self.rowspans[i] -= 1 # Decrease current rowspan
-                while k < len(align) and self.rowspans[k] == -1:
-                    i += 1 # Skip one cell
-                    if clear:
-                        self.rowspans[k] = 0
-                    k += 1
+                if self.rowspans[k]["colspan"] != 0:
+                    i += self.rowspans[k]["colspan"] - 1 # Skip extra cells if rowspanned column also has rowspan
+                self.rowspans[k]["rowspan"] -= 1 # Decrease remaining
 
             i += 1
 

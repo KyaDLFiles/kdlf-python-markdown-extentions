@@ -1,11 +1,7 @@
-from markdown import Markdown
-from markdown.inlinepatterns import InlineProcessor, IMAGE_LINK_RE, LinkInlineProcessor
-from markdown.blockprocessors import BlockProcessor
+from markdown.inlinepatterns import LinkInlineProcessor
 from markdown.extensions import Extension
-from markdown.preprocessors import Preprocessor
 import xml.etree.ElementTree as etree
 import re
-import markdown
 
 class SmallImageProcessor(LinkInlineProcessor):
     DIV_CLASS = "small-img"

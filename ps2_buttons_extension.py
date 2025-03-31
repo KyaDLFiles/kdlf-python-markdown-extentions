@@ -1,11 +1,7 @@
 from markdown import Markdown
 from markdown.inlinepatterns import InlineProcessor
-from markdown.blockprocessors import BlockProcessor
 from markdown.extensions import Extension
-from markdown.preprocessors import Preprocessor
 import xml.etree.ElementTree as etree
-import re
-import markdown
 
 _ALL_BTNS_LOWER = "t|q|x|o|du|dl|dd|dr|l1|l2|l3|r1|r2|r3|st|se"
 _ALL_BTNS_UPPER = _ALL_BTNS_LOWER.upper()
