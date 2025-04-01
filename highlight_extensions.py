@@ -37,7 +37,7 @@ class UnsureHighlightExtension(Extension):
             'superscript': ["", "Superscript to show after the text"],
             'tooltip': ["", "Tooltip to show when hovering on the superscript"],
         }
-        super(UnsureHighlightExtension).__init__(**kwargs)
+        super(UnsureHighlightExtension, self).__init__(**kwargs)
 
 
 class UnsureHighlightProcessor(InlineProcessor):
