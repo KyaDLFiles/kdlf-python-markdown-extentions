@@ -30,16 +30,14 @@ class UnsureHighlightExtension(Extension):
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(UnsureHighlightProcessor(UNSURE_HIGHLIGHT_PATTERN, md), "unsure_highlight", 66)
+        md.inlinePatterns.register(UnsureHighlightProcessor(UNSURE_HIGHLIGHT_PATTERN, md, self), "unsure_highlight", 66)
 
     def __init__(self, **kwargs):
         self.config = {
             'superscript': ["", "Superscript to show after the text"],
             'tooltip': ["", "Tooltip to show when hovering on the superscript"],
         }
-        """ Default configuration options. """
-
-        super().__init__(**kwargs)
+        super(UnsureHighlightExtension).__init__(**kwargs)
 
 
 class UnsureHighlightProcessor(InlineProcessor):
