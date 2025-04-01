@@ -34,6 +34,7 @@ class UnsureHighlightExtension(Extension):
 
     def __init__(self, **kwargs):
         self.config = {
+            'superscript': ["", "Superscript to show after the text"],
             'tooltip': ["", "Tooltip to show when hovering on the superscript"],
         }
         """ Default configuration options. """
@@ -48,14 +49,16 @@ class UnsureHighlightProcessor(InlineProcessor):
         el = etree.Element('span')
         el.text = m.group(1)
         el.attrib["class"] = self.SPAN_CLASS
-        e2 = etree.SubElement(el, 'sup')
-        e2.text = "[?]"
-        if self.tooltip != "":
-            e2.attrib["title"] = self.tooltip
+        if self.superscript != "":
+            e2 = etree.SubElement(el, 'sup')
+            e2.text = self.superscript
+            if self.tooltip != "":
+                e2.attrib["title"] = self.tooltip
         return el, m.start(0), m.end(0)
 
     def __init__(self, pattern: str, md: Markdown, ext: UnsureHighlightExtension):
         super().__init__(pattern)
         self.md = md
 
+        self.superscript = ext.getConfig("superscript")
         self.tooltip = ext.getConfig("tooltip")
