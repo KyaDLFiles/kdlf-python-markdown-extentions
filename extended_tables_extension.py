@@ -114,11 +114,11 @@ class ExtendedTableProcessor(tables.TableProcessor):
                                 c.attrib['class'] = f"{c.attrib['class']} table-highlight-{m2.group(0)[1:]}"  # Apply class
 
                         if m.group(5) is not None: # If the fifth group matched, it matched with >
-                            colspan = int(re.search(COLSPAN_PATTERN, text).group(0)[1])
+                            colspan = int(re.search(COLSPAN_PATTERN, text).group(0)[1:])
                             c.attrib['colspan'] = str(colspan) # Apply colspan
 
                         if m.group(6) is not None: # If the sixth group matched, it matched with ^
-                            rowspan = int(re.search(ROWSPAN_PATTERN, text).group(0)[1])
+                            rowspan = int(re.search(ROWSPAN_PATTERN, text).group(0)[1:])
                             c.attrib['rowspan'] = str(rowspan)
 
 
@@ -157,7 +157,7 @@ class ExtendedTableExtension(Extension):
     ><number>  : Apply colspan of <number> to cell
     ^<number>  : Apply rowspan of <number> to cell
 
-    The options must be specified in this order, but multiple values for the same attribute can be applied (except for colspan), and can be separated by spaces
+    The options must be specified in this order, but multiple values for the same attribute can be applied (except for rowspan/colspan), and can be separated by spaces
     Example:
         |!{.center-align +!1 >3} text|
     Creates
