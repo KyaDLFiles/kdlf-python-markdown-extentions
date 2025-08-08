@@ -39,7 +39,7 @@ class TextHighlightExtension(Extension):
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(WarningHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
+        md.inlinePatterns.register(TextHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
 
 
 
