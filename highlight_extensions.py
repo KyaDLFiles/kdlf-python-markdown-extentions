@@ -23,6 +23,26 @@ class WarningHighlightExtension(Extension):
 
 
 
+class TextHighlightProcessor(InlineProcessor):
+    SPAN_CLASS_PARTIAL = "text-highlight-"
+    def handleMatch(self, m, data):
+        el = etree.Element("span")
+        el.text = m.group(2)
+        el.attrib["class"] = self.SPAN_CLASS_PARTIAL + m.group(1)
+        return el, m.start(0), m.end(0)
+
+class TextHighlightExtension(Extension):
+    """Extension to convert *N! this pattern !* to <span style='text-highlight-N'> this pattern </span>, where N is a number"""
+
+    def extendMarkdown(self, md):
+        WARNING_HIGHLIGHT_PATTERN = r"\*(\d)!(.*?)!\*"  # match *N! a pattern like this *! where N is a number
+
+        md.registerExtension(self)
+        self.md = md
+        md.inlinePatterns.register(WarningHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
+
+
+
 class UnsureHighlightExtension(Extension):
     """Extension to convert *! this pattern !* to <span style='text-unsure'> this pattern </span>"""
     def extendMarkdown(self, md):
