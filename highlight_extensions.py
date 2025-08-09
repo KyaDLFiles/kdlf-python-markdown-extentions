@@ -19,7 +19,7 @@ class WarningHighlightExtension(Extension):
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(WarningHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
+        md.inlinePatterns.register(WarningHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 64)
 
 
 
@@ -35,11 +35,11 @@ class TextHighlightExtension(Extension):
     """Extension to convert *N! this pattern !* to <span style='text-highlight-N'> this pattern </span>, where N is a number"""
 
     def extendMarkdown(self, md):
-        WARNING_HIGHLIGHT_PATTERN = r"\*(\d)!(.*?)!\*"  # match *N! a pattern like this *! where N is a number
+        TEXT_HIGHLIGHT_PATTERN = r"\*(\d)!(.*?)!\*"  # match *N! a pattern like this *! where N is a number
 
         md.registerExtension(self)
         self.md = md
-        md.inlinePatterns.register(TextHighlightProcessor(WARNING_HIGHLIGHT_PATTERN, md), "warning_highlight", 65)
+        md.inlinePatterns.register(TextHighlightProcessor(TEXT_HIGHLIGHT_PATTERN, md), "text_highlight", 65)
 
 
 
