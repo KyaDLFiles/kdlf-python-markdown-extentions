@@ -35,7 +35,7 @@ class TextHighlightExtension(Extension):
     """Extension to convert *N! this pattern !* to <span style='text-highlight-N'> this pattern </span>, where N is a number"""
 
     def extendMarkdown(self, md):
-        TEXT_HIGHLIGHT_PATTERN = r"\*(\d)!(.*?)!\*"  # match *N! a pattern like this *! where N is a number
+        TEXT_HIGHLIGHT_PATTERN = r"\*(\d)+!(.*?)!\*"  # match *N! a pattern like this *! where N is a number
 
         md.registerExtension(self)
         self.md = md
